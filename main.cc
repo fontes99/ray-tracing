@@ -3,6 +3,7 @@
 #include "color.h"
 #include "hittable_list.h"
 #include "sphere.h"
+#include "hiperbol.h"
 #include "material.h"
 #include "camera.h"
 
@@ -94,16 +95,16 @@ int main() {
     // auto material_left   = make_shared<dielectric>(1.5);
     // auto material_right  =      make_shared<metal>(color(0.8, 0.6, 0.2), 0.0);
 
-    world.add(make_shared<sphere>(point3( 0.0, -100.5, -1.0), 100.0, material_ground));
-    world.add(make_shared<sphere>(point3( 0.0,    0.5, -1.0),   1.0, material_center));
+    // world.add(make_shared<sphere>(point3( 0.0, -100.5, -1.0), 100.0, material_ground));
+    world.add(make_shared<hiperbol>(point3( 0, 0, 0), 0.5, 5.0, 2, material_center));
     // world.add(make_shared<sphere>(point3(-1.0,    0.0, -1.0),   0.5, material_left));
     // world.add(make_shared<sphere>(point3(-1.0,    0.0, -1.0), -0.45, material_left));
     // world.add(make_shared<sphere>(point3( 1.0,    0.0, -1.0),   0.5, material_right));
 
     // Camera
-    point3 lookfrom(0,2.5,10);
-    point3 lookat(0,0.5,0);
-    vec3 vup(0,1,0);
+    point3 lookfrom(0, 10, 0);
+    point3 lookat(0, 0, 0);
+    vec3 vup(0,0,1);
     auto dist_to_focus = 10.0;
     auto aperture = 0.1;
 

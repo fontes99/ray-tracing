@@ -25,6 +25,8 @@ bool hiperbol::hit(const ray& r, double t_min, double t_max, hit_record& rec) co
     
  /*
 
+    Expanding Hiperbole equation:
+
     x**2      +   y**2      -   z**2       =   R**2
    (x-Cx)**2  +  (y-Cy)**2  -  (z-Cz)**2   =   R**2
    
@@ -40,19 +42,28 @@ bool hiperbol::hit(const ray& r, double t_min, double t_max, hit_record& rec) co
     (t*dx + ex)**2  +  (t*dy + ey)**2  -  (t*dz + ez)**2  -  R**2  = 0
     t**2 * dx**2 + 2*t*dx*ex + ex**2   +   t**2 * dy**2 + 2*t*dy*ey + ey**2   -   t**2 * dz**2 - 2*t*dz*ez - ez**2)  -  R**2  =  0
 
-    (dx**2 + dy**2 - dz**2) * t**2   +   2*(dx*ex + dy*ey - dz*ez)*t  +  (ex**2 + ey**2 - ez**2) - R**2 = 0
+    (dx**2 + dy**2 - dz**2) * t**2   +   2*(dx*ex + dy*ey - dz*ez) * t  +  (ex**2 + ey**2 - ez**2 - R**2) = 0
  
  */
 
     //     e   =      A     -    C
-    vec3 vec_e = r.origin() - center;
+    vec3 e = r.origin() - center;
 
-    auto a = r.direction().length_squared();
-    auto half_b = dot(vec_e, r.direction());
-    auto c = vec_e.length_squared() - radius*radius;
+    auto a = r.direction()[0]*r.direction()[0]
+           + r.direction()[1]*r.direction()[1] 
+           - r.direction()[2]*r.direction()[2]; //(dx**2 + dy**2 - dz**2)
+    
+    auto half_b = (r.direction()[0]*e[0] 
+                 + r.direction()[1]*e[1] 
+                 - r.direction()[2]*e[2]); //2*(dx*ex + dy*ey - dz*ez)
+    
+    auto c = e[0]*e[0]
+           + e[1]*e[1] 
+           - e[2]*e[2] 
+           - radius*radius;  //(ex**2 + ey**2 - ez**2 - R**2)
 
-    auto delta = half_b*half_b - a*c; // Delta Bhaskara
-
+    auto delta = half_b*half_b - a*c;
+    
     if (delta < 0) return false;
     auto sqrtd = sqrt(delta);
 
@@ -64,9 +75,14 @@ bool hiperbol::hit(const ray& r, double t_min, double t_max, hit_record& rec) co
             return false;
     }
 
+
+    if (r.at(rec.t)[1] > height || r.at(rec.t)[1] < -height){
+        return false;
+    } 
+
     rec.t = root;
     rec.p = r.at(rec.t);
-    vec3 outward_normal = (rec.p - center) / radius;
+    vec3 outward_normal = -(rec.p - center) / radius;
     rec.set_face_normal(r, outward_normal);
     rec.mat_ptr = mat_ptr;   
 
