@@ -23,10 +23,33 @@ class hiperbol : public hittable {
 
 bool hiperbol::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
     
-    vec3 oc = r.origin() - center;
+ /*
+
+    x**2      +   y**2      -   z**2       =   R**2
+   (x-Cx)**2  +  (y-Cy)**2  -  (z-Cz)**2   =   R**2
+   
+    P = A + t*d
+    (x, y, z) = (Ax, Ay, Az) + t * (dx, dy, dz)
+    (x, y, z) = (Ax + t*dx , Ay + t*dy , Az + t*dz)
+
+    (Ax + t*dx - Cx)**2  +  (Ay + t*dy - Cy)**2  -  (Az + t*dz - Cz)**2   =   R**2
+
+    e = A - C
+    (ex, ey, ez) = Ax-Cx, Ay-Cy, Az-Cz, 
+
+    (t*dx + ex)**2  +  (t*dy + ey)**2  -  (t*dz + ez)**2  -  R**2  = 0
+    t**2 * dx**2 + 2*t*dx*ex + ex**2   +   t**2 * dy**2 + 2*t*dy*ey + ey**2   -   t**2 * dz**2 - 2*t*dz*ez - ez**2)  -  R**2  =  0
+
+    (dx**2 + dy**2 - dz**2) * t**2   +   2*(dx*ex + dy*ey - dz*ez)*t  +  (ex**2 + ey**2 - ez**2) - R**2 = 0
+ 
+ */
+
+    //     e   =      A     -    C
+    vec3 vec_e = r.origin() - center;
+
     auto a = r.direction().length_squared();
-    auto half_b = dot(oc, r.direction());
-    auto c = oc.length_squared() - radius*radius;
+    auto half_b = dot(vec_e, r.direction());
+    auto c = vec_e.length_squared() - radius*radius;
 
     auto delta = half_b*half_b - a*c; // Delta Bhaskara
 
