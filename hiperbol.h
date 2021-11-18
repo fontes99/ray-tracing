@@ -50,16 +50,16 @@ bool hiperbol::hit(const ray& r, double t_min, double t_max, hit_record& rec) co
     vec3 e = r.origin() - center;
 
     auto a = r.direction()[0]*r.direction()[0]
-           + r.direction()[1]*r.direction()[1] 
-           - r.direction()[2]*r.direction()[2]; //(dx**2 + dy**2 - dz**2)
+           - r.direction()[1]*r.direction()[1] 
+           + r.direction()[2]*r.direction()[2]; //(dx**2 + dy**2 - dz**2)
     
     auto half_b = (r.direction()[0]*e[0] 
-                 + r.direction()[1]*e[1] 
-                 - r.direction()[2]*e[2]); //2*(dx*ex + dy*ey - dz*ez)
+                 - r.direction()[1]*e[1] 
+                 + r.direction()[2]*e[2]); //2*(dx*ex + dy*ey - dz*ez)
     
     auto c = e[0]*e[0]
-           + e[1]*e[1] 
-           - e[2]*e[2] 
+           - e[1]*e[1] 
+           + e[2]*e[2] 
            - radius*radius;  //(ex**2 + ey**2 - ez**2 - R**2)
 
     auto delta = half_b*half_b - a*c;
@@ -76,9 +76,9 @@ bool hiperbol::hit(const ray& r, double t_min, double t_max, hit_record& rec) co
     }
 
 
-    if (r.at(rec.t)[1] > height || r.at(rec.t)[1] < -height){
-        return false;
-    } 
+    // if (r.at(rec.t)[1] > height || r.at(rec.t)[1] < -height){
+    //     return false;
+    // } 
 
     rec.t = root;
     rec.p = r.at(rec.t);
